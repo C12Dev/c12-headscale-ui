@@ -8,12 +8,17 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2
+      - uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org/
@@ -25,7 +30,7 @@ jobs:
           cd dist
           zip -r headscale-ui-${{ github.ref_name }}.zip headscale-ui
       - name: Create GitHub release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ env.ReleaseVersion }}
@@ -51,10 +56,11 @@ jobs:
       - name: Build Docker Images for Multi Platform
         # You may pin to the exact commit or the version.
         # uses: huaweicloud/swr-multiplatform-build-action@0dba9fc56ef5a21bc21884b29101e584fbbb539c
-        uses: huaweicloud/swr-multiplatform-build-action@v1.2.1
+        uses: huaweicloud/swr-multiplatform-build-action@0dba9fc56ef5a21bc21884b29101e584fbbb539c # v1.2.1
         with:
           # the docker images build tag
           image_tag: simcu/headscale-ui:${{ github.ref_name }}
           platforms: linux/amd64,linux/arm64
           push: true
           
+
